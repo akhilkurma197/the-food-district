@@ -12,15 +12,19 @@ export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
 
+  // LOGIC 1: Only update the badge count when the cart changes
   useEffect(() => {
-    // 1. Update cart count
     setCount(cart.length);
+  }, [cart]);
 
-    // 2. FORCE REDIRECT TO HOME ON REFRESH (Only if not already on home)
+  // LOGIC 2: This handles the "Go to Home on Refresh" requirement.
+  // By using an empty dependency array [], this ONLY runs when the website 
+  // is first opened or refreshed. It will NOT run when you add items to the cart.
+  useEffect(() => {
     if (pathname !== "/") {
       router.push("/");
     }
-  }, [cart]); // Removed pathname from deps to prevent infinite loop
+  }, []); 
 
   return (
     <motion.nav 
@@ -31,7 +35,7 @@ export default function Navbar() {
       <div className="w-full max-w-6xl glass px-8 py-4 rounded-3xl flex items-center justify-between border border-white/10 bg-black/40 backdrop-blur-3xl shadow-2xl">
         <Link href="/" className="text-xl font-black tracking-tighter flex items-center gap-2 group">
           <UtensilsCrossed className="text-[#FF6B35] group-hover:rotate-12 transition-transform" />
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500 uppercase">
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500 uppercase tracking-tighter">
             THE FOOD DISTRICT
           </span>
         </Link>
